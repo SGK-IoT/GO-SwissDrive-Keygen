@@ -8,6 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
       --primary-color: #00ff00;
@@ -229,13 +230,100 @@
       background-size: 20px 20px;
       z-index: -1;
     }
+    
+    /* Audio control styling */
+    .audio-control {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--button-bg);
+      border: 1px solid var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s;
+      box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    }
+    
+    .audio-control:hover {
+      box-shadow: var(--neon-glow);
+    }
+    
+    .audio-control i {
+      color: var(--primary-color);
+      font-size: 18px;
+      text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+    }
+    
+    .audio-control.muted .fa-volume-high {
+      display: none;
+    }
+    
+    .audio-control:not(.muted) .fa-volume-xmark {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div class="grid-bg"></div>
+  <div id="audio-container"></div>
   <div id="root"></div>
   
+  <!-- Audio player -->
+  <audio id="background-music" loop>
+    <source src="audio.mp3" type="audio/mpeg">
+    Dein Browser unterstützt keine Audiowiedergabe.
+  </audio>
+  
   <script type="text/babel">
+    // Audio Control Component
+    const AudioControl = () => {
+      const [muted, setMuted] = React.useState(false);
+      const audioRef = React.useRef(null);
+      
+      React.useEffect(() => {
+        audioRef.current = document.getElementById('background-music');
+        
+        // Start playing when user interacts with the page
+        const handleFirstInteraction = () => {
+          audioRef.current.play().catch(e => console.log('Autoplay prevented:', e));
+          document.removeEventListener('click', handleFirstInteraction);
+        };
+        
+        document.addEventListener('click', handleFirstInteraction);
+        
+        return () => {
+          document.removeEventListener('click', handleFirstInteraction);
+        };
+      }, []);
+      
+      const toggleMute = () => {
+        if (audioRef.current) {
+          if (muted) {
+            audioRef.current.play();
+          } else {
+            audioRef.current.pause();
+          }
+          setMuted(!muted);
+        }
+      };
+      
+      return (
+        <div className={`audio-control ${muted ? 'muted' : ''}`} onClick={toggleMute}>
+          <i className="fas fa-volume-high"></i>
+          <i className="fas fa-volume-xmark"></i>
+        </div>
+      );
+    };
+    
+    // Render audio control
+    ReactDOM.render(<AudioControl />, document.getElementById('audio-container'));
+    
     // Constants equivalent to the Python script
     const FIXED_SALT = "0Ox.|${,&bJu0|(j]";
     
