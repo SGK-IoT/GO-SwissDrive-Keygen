@@ -8,7 +8,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
       --primary-color: #00ff00;
@@ -186,6 +185,27 @@
       color: #ff3333;
     }
     
+    .info-box {
+      border: 1px dashed rgba(0, 255, 0, 0.3);
+      background-color: rgba(0, 50, 0, 0.3);
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 0.85rem;
+      display: none;
+    }
+    
+    .info-box.show {
+      display: block;
+      animation: fadeInOut 0.5s;
+    }
+    
+    .path-highlight {
+      color: var(--primary-color);
+      text-shadow: var(--text-glow);
+      font-weight: bold;
+    }
+    
     @keyframes pulse {
       0% {
         opacity: 0.8;
@@ -230,100 +250,13 @@
       background-size: 20px 20px;
       z-index: -1;
     }
-    
-    /* Audio control styling */
-    .audio-control {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: var(--button-bg);
-      border: 1px solid var(--primary-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 100;
-      transition: all 0.3s;
-      box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-    }
-    
-    .audio-control:hover {
-      box-shadow: var(--neon-glow);
-    }
-    
-    .audio-control i {
-      color: var(--primary-color);
-      font-size: 18px;
-      text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
-    }
-    
-    .audio-control.muted .fa-volume-high {
-      display: none;
-    }
-    
-    .audio-control:not(.muted) .fa-volume-xmark {
-      display: none;
-    }
   </style>
 </head>
 <body>
   <div class="grid-bg"></div>
-  <div id="audio-container"></div>
   <div id="root"></div>
   
-  <!-- Audio player -->
-  <audio id="background-music" loop>
-    <source src="audio.mp3" type="audio/mpeg">
-    Dein Browser unterstützt keine Audiowiedergabe.
-  </audio>
-  
   <script type="text/babel">
-    // Audio Control Component
-    const AudioControl = () => {
-      const [muted, setMuted] = React.useState(false);
-      const audioRef = React.useRef(null);
-      
-      React.useEffect(() => {
-        audioRef.current = document.getElementById('background-music');
-        
-        // Start playing when user interacts with the page
-        const handleFirstInteraction = () => {
-          audioRef.current.play().catch(e => console.log('Autoplay prevented:', e));
-          document.removeEventListener('click', handleFirstInteraction);
-        };
-        
-        document.addEventListener('click', handleFirstInteraction);
-        
-        return () => {
-          document.removeEventListener('click', handleFirstInteraction);
-        };
-      }, []);
-      
-      const toggleMute = () => {
-        if (audioRef.current) {
-          if (muted) {
-            audioRef.current.play();
-          } else {
-            audioRef.current.pause();
-          }
-          setMuted(!muted);
-        }
-      };
-      
-      return (
-        <div className={`audio-control ${muted ? 'muted' : ''}`} onClick={toggleMute}>
-          <i className="fas fa-volume-high"></i>
-          <i className="fas fa-volume-xmark"></i>
-        </div>
-      );
-    };
-    
-    // Render audio control
-    ReactDOM.render(<AudioControl />, document.getElementById('audio-container'));
-    
     // Constants equivalent to the Python script
     const FIXED_SALT = "0Ox.|${,&bJu0|(j]";
     
@@ -432,6 +365,12 @@
         setCurrentLevelDisplayName('');
         setCurrentFeatureDisplayNames([]);
         
+        // Info-Box ausblenden, wenn sie angezeigt wird
+        const infoBox = document.getElementById('install-path-info');
+        if (infoBox) {
+          infoBox.className = "info-box";
+        }
+        
         const emailValue = email.trim();
         const baseLevelDisplayName = level;
         
@@ -515,24 +454,47 @@
           return;
         }
         
-        const emailPrefix = generatedEmail.includes('@') 
-          ? generatedEmail.split('@')[0] 
-          : generatedEmail;
+        // Standardverzeichnis für DEVELOPER-Lizenz
+        const isDeveloper = currentLevelDisplayName === "DEVELOPER";
+        const appDataPath = isDeveloper ? `%APPDATA%\\GO SwissDrive GmbH\\Servicetool_4\\` : "";
+        let defaultFilename = "";
         
-        let levelDescForFilename = currentLevelDisplayName;
-        if (currentFeatureDisplayNames.length > 0) {
-          const featuresStr = currentFeatureDisplayNames.join('_');
-          levelDescForFilename += `_${featuresStr}`;
+        if (isDeveloper) {
+          // Für DEVELOPER immer den festgelegten Namen verwenden
+          defaultFilename = "licence.txt";
+        } else {
+          // Für andere Lizenzen den dynamischen Namen verwenden
+          const emailPrefix = generatedEmail.includes('@') 
+            ? generatedEmail.split('@')[0] 
+            : generatedEmail;
+          
+          let levelDescForFilename = currentLevelDisplayName;
+          if (currentFeatureDisplayNames.length > 0) {
+            const featuresStr = currentFeatureDisplayNames.join('_');
+            levelDescForFilename += `_${featuresStr}`;
+          }
+          
+          defaultFilename = `${emailPrefix}_${levelDescForFilename}_lizenz.txt`
+            .replace(/ /g, '_')
+            .replace(/:/g, '-')
+            .replace(/\\/g, '_')
+            .replace(/\//g, '_')
+            .toLowerCase();
         }
         
-        const defaultFilename = `${emailPrefix}_${levelDescForFilename}_lizenz.txt`
-          .replace(' ', '_')
-          .replace(':', '-')
-          .replace('\\', '_')
-          .replace('/', '_')
-          .toLowerCase();
-        
         const licenseContent = `${generatedEmail}\n${generatedKey}\n`;
+        
+        // Info Box anzeigen mit Installationspfad
+        const infoBox = document.getElementById('install-path-info');
+        if (infoBox) {
+          const pathSpan = document.getElementById('target-path');
+          if (pathSpan) {
+            pathSpan.textContent = isDeveloper ? 
+              `%APPDATA%\\GO SwissDrive GmbH\\Servicetool_4\\licence.txt` : 
+              "(Beliebiges Verzeichnis)";
+          }
+          infoBox.className = "info-box show";
+        }
         
         // Create blob for download
         const blob = new Blob([licenseContent], { type: 'text/plain' });
@@ -549,7 +511,7 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
-        setStatusMessage(`Gespeichert: ${defaultFilename}`);
+        setStatusMessage(`Gespeichert: ${defaultFilename}${isDeveloper ? " (Bitte in den korrekten Pfad kopieren)" : ""}`);
       };
       
       return (
@@ -619,6 +581,11 @@
             >
               Speichern...
             </button>
+          </div>
+          
+          <div id="install-path-info" className="info-box">
+            <p>Wichtig: Für die korrekte Funktion muss die Lizenzdatei in folgendem Pfad gespeichert werden:</p>
+            <p className="path-highlight" id="target-path"></p>
           </div>
           
           <div className={`status-bar ${status.isError ? 'error' : ''}`}>
