@@ -186,13 +186,14 @@
     }
     
     .info-box {
-      border: 1px dashed rgba(0, 255, 0, 0.3);
-      background-color: rgba(0, 50, 0, 0.3);
+      border: 1px dashed rgba(255, 165, 0, 0.6);
+      background-color: rgba(50, 25, 0, 0.3);
       border-radius: 5px;
       padding: 10px;
       margin: 10px 0;
       font-size: 0.85rem;
       display: none;
+      color: #ffa500;
     }
     
     .info-box.show {
@@ -201,8 +202,8 @@
     }
     
     .path-highlight {
-      color: var(--primary-color);
-      text-shadow: var(--text-glow);
+      color: #ffa500;
+      text-shadow: 0 0 10px rgba(255, 165, 0, 0.7);
       font-weight: bold;
     }
     
@@ -516,7 +517,7 @@
       
       return (
         <div className="app-container">
-          <h1>GO SwissDrive Lizenzgenerator</h1>
+          <h1>---[ GO SwissDrive Lizenzgenerator ]---</h1>
           
           <div className="input-group">
             <label htmlFor="email">E-Mail:</label>
@@ -584,7 +585,7 @@
           </div>
           
           <div id="install-path-info" className="info-box">
-            <p>Wichtig: Für die korrekte Funktion muss die Lizenzdatei in folgendem Pfad gespeichert werden:</p>
+            <p>⚠️ WICHTIG: Für die korrekte Funktion muss die Lizenzdatei in folgendem Pfad gespeichert werden:</p>
             <p className="path-highlight" id="target-path"></p>
           </div>
           
