@@ -207,6 +207,13 @@
       font-weight: bold;
     }
     
+    .username-highlight {
+      color: #00ffff;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+      font-weight: bold;
+      font-style: italic;
+    }
+    
     @keyframes pulse {
       0% {
         opacity: 0.8;
@@ -501,9 +508,8 @@
             // Zusätzliche Info für Windows-Pfad bei DEVELOPER-Lizenz
             const winPathSpan = document.getElementById('windows-path');
             if (winPathSpan) {
-              // Versuchen, einen Windows-typischen Pfad zu erstellen
-              let winPath = "C:\\Users\\[BENUTZERNAME]\\AppData\\Roaming\\GO SwissDrive GmbH\\Servicetool_4\\licence.txt";
-              winPathSpan.textContent = winPath;
+              // Pfad mit formatiertem Benutzernamen
+              winPathSpan.innerHTML = "C:\\Users\\<span class='username-highlight'>[BENUTZERNAME]</span>\\AppData\\Roaming\\GO SwissDrive GmbH\\Servicetool_4\\licence.txt";
               winPathSpan.parentElement.style.display = "block";
             }
             
