@@ -457,7 +457,11 @@
         
         // Standardverzeichnis für DEVELOPER-Lizenz
         const isDeveloper = currentLevelDisplayName === "DEVELOPER";
-        const appDataPath = isDeveloper ? `%APPDATA%\\GO SwissDrive GmbH\\Servicetool_4\\` : "";
+        
+        // Konkrete Pfade definieren
+        const developerPath = `%APPDATA%\\GO SwissDrive GmbH\\Servicetool_4\\licence.txt`;
+        const otherLicensePath = `(Kein spezifischer Pfad erforderlich)`;
+        
         let defaultFilename = "";
         
         if (isDeveloper) {
@@ -490,11 +494,28 @@
         if (infoBox) {
           const pathSpan = document.getElementById('target-path');
           if (pathSpan) {
-            pathSpan.textContent = isDeveloper ? 
-              `%APPDATA%\\GO SwissDrive GmbH\\Servicetool_4\\licence.txt` : 
-              "(Beliebiges Verzeichnis)";
+            pathSpan.textContent = isDeveloper ? developerPath : otherLicensePath;
           }
           infoBox.className = "info-box show";
+          
+          // Zusätzliche Info für Windows-Pfad bei DEVELOPER-Lizenz
+          const winPathSpan = document.getElementById('windows-path');
+          if (winPathSpan) {
+            if (isDeveloper) {
+              // Versuchen, einen Windows-typischen Pfad zu erstellen
+              let winPath = "";
+              try {
+                // AppData ist normalerweise C:\Users\[Username]\AppData\Roaming
+                winPath = "C:\\Users\\[BENUTZERNAME]\\AppData\\Roaming\\GO SwissDrive GmbH\\Servicetool_4\\licence.txt";
+                winPathSpan.textContent = winPath;
+                winPathSpan.parentElement.style.display = "block";
+              } catch(e) {
+                winPathSpan.parentElement.style.display = "none";
+              }
+            } else {
+              winPathSpan.parentElement.style.display = "none";
+            }
+          }
         }
         
         // Create blob for download
