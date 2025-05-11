@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lizenzgenerator.goswissdrive.com/sitemap.xml

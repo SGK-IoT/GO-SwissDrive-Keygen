@@ -3,11 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GO SwissDrive License Generator</title>
+  <title>GO SwissDrive Lizenzgenerator | Offizielles Lizenzierung Tool</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Der offizielle GO SwissDrive Lizenzgenerator für die Erstellung von Lizenzschlüsseln für DEALER, OEM, SERVICE und DEVELOPER. Einfach, schnell und sicher.">
+  <meta name="keywords" content="GO SwissDrive, Lizenzgenerator, Lizenzschlüssel, E-Bike Software, Servicetool, DEALER Lizenz, OEM Lizenz">
+  <meta name="author" content="GO SwissDrive GmbH">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lizenzgenerator.goswissdrive.com/">
+  <meta property="og:title" content="GO SwissDrive Lizenzgenerator">
+  <meta property="og:description" content="Offizielles Tool zur Generierung von GO SwissDrive Lizenzschlüsseln.">
+  <meta property="og:image" content="https://lizenzgenerator.goswissdrive.com/og-image.jpg">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://lizenzgenerator.goswissdrive.com/">
+  <meta property="twitter:title" content="GO SwissDrive Lizenzgenerator">
+  <meta property="twitter:description" content="Offizielles Tool zur Generierung von GO SwissDrive Lizenzschlüsseln.">
+  <meta property="twitter:image" content="https://lizenzgenerator.goswissdrive.com/twitter-image.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- Stylesheet und Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  
+  <!-- Strukturierte Daten für Suchmaschinen -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "GO SwissDrive Lizenzgenerator",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "description": "Offizielles Tool zur Generierung von GO SwissDrive Lizenzschlüsseln für DEALER, OEM, SERVICE und DEVELOPER."
+  }
+  </script>
   <style>
     :root {
       --primary-color: #00ff00;
@@ -609,7 +651,7 @@
           </div>
           
           <div id="install-path-info" className="info-box">
-            <p>WICHTIG: Für die korrekte Funktion muss die Lizenzdatei in folgendem Pfad gespeichert werden:</p>
+            <p>⚠️ WICHTIG: Für die korrekte Funktion muss die Lizenzdatei in folgendem Pfad gespeichert werden:</p>
             <p className="path-highlight" id="target-path"></p>
             <p style={{display: 'none', marginTop: '10px'}}>
               Windows-Pfad (Beispiel): <span className="path-highlight" id="windows-path"></span>
