@@ -1,6 +1,6 @@
 # GO SwissDrive Servicetool License Generator
 
-Eine moderne, neon-inspirierte React-Anwendung zur Erstellung von Lizenzschlüsseln für die GO SwissDrive Software.
+Eine moderne, React-Anwendung zur Erstellung von Lizenzschlüsseln für die GO SwissDrive Software.
 
 ## ✨ Funktionen
 
