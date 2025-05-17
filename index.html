@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>GO SwissDrive Lizenzgenerator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -38,6 +38,7 @@
       justify-content: center;
       padding: 20px;
       overflow-x: hidden;
+      position: relative;
     }
     
     .app-container {
@@ -50,6 +51,7 @@
       padding: 20px;
       position: relative;
       overflow: hidden;
+      margin: 0 auto;
     }
     
     .app-container::before {
@@ -251,6 +253,59 @@
       font-size: 1.1rem;
     }
     
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .app-container {
+        padding: 15px 10px;
+        margin-top: 80px; /* Space for the buttons at top */
+      }
+      
+      h1 {
+        font-size: 1.2rem;
+        margin-top: 0;
+      }
+      
+      .link-buttons {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px 0;
+        left: 0;
+        border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+      }
+      
+      .link-button {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .button-container {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .button-container button {
+        width: 100%;
+        margin: 5px 0;
+      }
+      
+      .output-container {
+        max-height: 120px;
+      }
+      
+      .input-group label, .checkbox-container {
+        font-size: 0.9rem;
+      }
+    }
+    
     @keyframes pulse {
       0% {
         opacity: 0.8;
@@ -302,10 +357,10 @@
   
   <!-- Link-Buttons -->
   <div class="link-buttons">
-    <a href="https://github.com/SGK-IoT/GO-SwissDrive-Keygen" target="_blank" class="link-button">
+    <a href="https://github.com/USERNAME/goswissdrive-keygen" target="_blank" class="link-button">
       <i class="fab fa-github"></i> GitHub
     </a>
-    <a href="https://github.com/SGK-IoT/GO-SwissDrive-Keygen/wiki" target="_blank" class="link-button">
+    <a href="https://github.com/USERNAME/goswissdrive-keygen/wiki" target="_blank" class="link-button">
       <i class="fas fa-book"></i> Anleitung
     </a>
   </div>
@@ -319,7 +374,7 @@
     const PERMISSION_LEVEL_SALTS = {
       "DEALER": "2",
       "OEM": "4",
-      "SERVICE/GOD": "8",
+      "SERVICE": "8",
       "DEVELOPER": "20"
     };
     
