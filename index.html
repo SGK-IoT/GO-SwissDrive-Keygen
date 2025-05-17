@@ -3,53 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GO SwissDrive Lizenzgenerator | Offizielles Lizenzierung Tool</title>
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Der offizielle GO SwissDrive Lizenzgenerator für die Erstellung von Lizenzschlüsseln für DEALER, OEM, SERVICE und DEVELOPER. Einfach, schnell und sicher.">
-  <meta name="keywords" content="GO SwissDrive, Lizenzgenerator, Lizenzschlüssel, E-Bike Software, Servicetool, DEALER Lizenz, OEM Lizenz">
-  <meta name="author" content="GO SwissDrive GmbH">
-  <meta name="robots" content="index, follow">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://lizenzgenerator.goswissdrive.com/">
-  <meta property="og:title" content="GO SwissDrive Lizenzgenerator">
-  <meta property="og:description" content="Offizielles Tool zur Generierung von GO SwissDrive Lizenzschlüsseln.">
-  <meta property="og:image" content="https://lizenzgenerator.goswissdrive.com/og-image.jpg">
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://lizenzgenerator.goswissdrive.com/">
-  <meta property="twitter:title" content="GO SwissDrive Lizenzgenerator">
-  <meta property="twitter:description" content="Offizielles Tool zur Generierung von GO SwissDrive Lizenzschlüsseln.">
-  <meta property="twitter:image" content="https://lizenzgenerator.goswissdrive.com/twitter-image.jpg">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  
-  <!-- Stylesheet und Scripts -->
+  <title>GO SwissDrive Lizenzgenerator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-  
-  <!-- Strukturierte Daten für Suchmaschinen -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "GO SwissDrive Lizenzgenerator",
-    "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "Web",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "EUR"
-    },
-    "description": "Offizielles Tool zur Generierung von GO SwissDrive Lizenzschlüsseln für DEALER, OEM, SERVICE und DEVELOPER."
-  }
-  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
       --primary-color: #00ff00;
@@ -256,6 +215,42 @@
       font-style: italic;
     }
     
+    /* Link-Buttons */
+    .link-buttons {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+    
+    .link-button {
+      background-color: var(--button-bg);
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      border-radius: 5px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .link-button:hover {
+      background-color: var(--button-hover);
+      box-shadow: var(--neon-glow);
+      transform: translateY(-2px);
+    }
+    
+    .link-button i {
+      font-size: 1.1rem;
+    }
+    
     @keyframes pulse {
       0% {
         opacity: 0.8;
@@ -304,6 +299,17 @@
 </head>
 <body>
   <div class="grid-bg"></div>
+  
+  <!-- Link-Buttons -->
+  <div class="link-buttons">
+    <a href="https://github.com/USERNAME/goswissdrive-keygen" target="_blank" class="link-button">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+    <a href="https://github.com/USERNAME/goswissdrive-keygen/wiki" target="_blank" class="link-button">
+      <i class="fas fa-book"></i> Anleitung
+    </a>
+  </div>
+  
   <div id="root"></div>
   
   <script type="text/babel">
@@ -313,7 +319,7 @@
     const PERMISSION_LEVEL_SALTS = {
       "DEALER": "2",
       "OEM": "4",
-      "SERVICE/GOD": "8",
+      "SERVICE": "8",
       "DEVELOPER": "20"
     };
     
