@@ -253,10 +253,30 @@
       font-size: 1.1rem;
     }
     
+    /* Key Counter Styling */
+    .key-counter {
+      position: fixed;
+      bottom: 15px;
+      right: 15px; /* MODIFIED: Changed from left to right */
+      color: var(--primary-color);
+      text-shadow: var(--text-glow);
+      font-size: 0.9rem;
+      background-color: rgba(10, 10, 10, 0.7);
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 1px solid rgba(0, 255, 0, 0.2);
+      z-index: 100;
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
       body {
         padding: 10px;
+        padding-bottom: 60px; /* Space for counter */
       }
       
       .app-container {
@@ -303,6 +323,13 @@
       
       .input-group label, .checkbox-container {
         font-size: 0.9rem;
+      }
+      
+      .key-counter {
+        bottom: 10px;
+        right: 10px; /* MODIFIED: Changed from left to right */
+        font-size: 0.8rem;
+        padding: 6px 10px;
       }
     }
     
@@ -457,6 +484,26 @@
       const [generatedEmail, setGeneratedEmail] = React.useState('');
       const [currentLevelDisplayName, setCurrentLevelDisplayName] = React.useState('');
       const [currentFeatureDisplayNames, setCurrentFeatureDisplayNames] = React.useState([]);
+      const [keyCount, setKeyCount] = React.useState('...');
+
+      React.useEffect(() => {
+        // Fetch initial key count when component mounts
+        const fetchCount = async () => {
+          try {
+            const response = await fetch('/api/counter');
+            if (response.ok) {
+              const data = await response.json();
+              setKeyCount(data.count);
+            } else {
+              setKeyCount('N/A');
+            }
+          } catch (error) {
+            console.error('Failed to fetch key count:', error);
+            setKeyCount('N/A');
+          }
+        };
+        fetchCount();
+      }, []); // Empty dependency array ensures this runs only once
       
       const handleFeatureChange = (feature) => {
         setFeatures(prev => ({
@@ -470,7 +517,7 @@
         console.log(message);
       };
       
-      const generateAction = () => {
+      const generateAction = async () => {
         setGeneratedKey('');
         setGeneratedEmail('');
         setCurrentLevelDisplayName('');
@@ -535,6 +582,17 @@
           }
           
           setStatusMessage(`Schlüssel für '${emailValue}' (${statusMsgLevelPart}) generiert. Finaler Modus: ${finalModus}`);
+
+          // Increment the counter on the server
+          try {
+            const response = await fetch('/api/counter', { method: 'POST' });
+            if (response.ok) {
+              const data = await response.json();
+              setKeyCount(data.count); // Update state with the new count
+            }
+          } catch (error) {
+            console.warn('Could not update key count on server.', error);
+          }
           
         } catch (error) {
           const errorMsg = `GENERIERUNGSFEHLER: ${error.message}`;
@@ -643,86 +701,92 @@
       };
       
       return (
-        <div className="app-container">
-          <h1>GO SwissDrive Lizenzgenerator</h1>
-          
-          <div className="input-group">
-            <label htmlFor="email">E-Mail:</label>
-            <input 
-              type="email" 
-              id="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && generateAction()}
-            />
-          </div>
-          
-          <div className="input-group">
-            <label htmlFor="level">Basislevel:</label>
-            <select 
-              id="level" 
-              value={level}
-              onChange={(e) => setLevel(e.target.value)}
-            >
-              {Object.keys(PERMISSION_LEVEL_SALTS).map(levelKey => (
-                <option key={levelKey} value={levelKey}>{levelKey}</option>
-              ))}
-            </select>
-          </div>
-          
-          <div className="features-container">
-            <div className="features-title">(Nur für Versionen älter als 4.1.3)</div>
+        <React.Fragment>
+          <div className="app-container">
+            <h1>GO SwissDrive Lizenzgenerator</h1>
             
-            {Object.entries(UI_FEATURE_DISPLAY_NAMES).map(([displayName, internalKey]) => (
-              <div key={internalKey} className="checkbox-container">
-                <input 
-                  type="checkbox" 
-                  id={internalKey} 
-                  checked={features[internalKey] || false}
-                  onChange={() => handleFeatureChange(internalKey)}
-                />
-                <label htmlFor={internalKey}>{displayName}</label>
-              </div>
-            ))}
+            <div className="input-group">
+              <label htmlFor="email">E-Mail:</label>
+              <input 
+                type="email" 
+                id="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && generateAction()}
+              />
+            </div>
+            
+            <div className="input-group">
+              <label htmlFor="level">Basislevel:</label>
+              <select 
+                id="level" 
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+              >
+                {Object.keys(PERMISSION_LEVEL_SALTS).map(levelKey => (
+                  <option key={levelKey} value={levelKey}>{levelKey}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="features-container">
+              <div className="features-title">(Nur für Versionen älter als 4.1.3)</div>
+              
+              {Object.entries(UI_FEATURE_DISPLAY_NAMES).map(([displayName, internalKey]) => (
+                <div key={internalKey} className="checkbox-container">
+                  <input 
+                    type="checkbox" 
+                    id={internalKey} 
+                    checked={features[internalKey] || false}
+                    onChange={() => handleFeatureChange(internalKey)}
+                  />
+                  <label htmlFor={internalKey}>{displayName}</label>
+                </div>
+              ))}
+            </div>
+            
+            <div className="button-container">
+              <button onClick={generateAction} className="glow-effect">GENERIEREN</button>
+              <button 
+                onClick={copyToClipboard}
+                disabled={!generatedKey} 
+                className={generatedKey ? "glow-effect" : ""}
+              >
+                KOPIEREN
+              </button>
+            </div>
+            
+            <div className="output-container">
+              <div className="output-text">{generatedKey}</div>
+            </div>
+            
+            <div className="button-container">
+              <button 
+                onClick={saveAsAction}
+                disabled={!generatedKey}
+                className={generatedKey ? "glow-effect" : ""}
+              >
+                Speichern...
+              </button>
+            </div>
+            
+            <div id="install-path-info" className="info-box">
+              <p>⚠️ WICHTIG: Für die korrekte Funktion muss die Lizenzdatei in folgendem Pfad gespeichert werden:</p>
+              <p className="path-highlight" id="target-path"></p>
+              <p style={{display: 'none', marginTop: '10px'}}>
+                Windows-Pfad (Beispiel): <span className="path-highlight" id="windows-path"></span>
+              </p>
+            </div>
+            
+            <div className={`status-bar ${status.isError ? 'error' : ''}`}>
+              {status.message}
+            </div>
           </div>
-          
-          <div className="button-container">
-            <button onClick={generateAction} className="glow-effect">GENERIEREN</button>
-            <button 
-              onClick={copyToClipboard}
-              disabled={!generatedKey} 
-              className={generatedKey ? "glow-effect" : ""}
-            >
-              KOPIEREN
-            </button>
+          <div className="key-counter">
+            <i className="fas fa-key"></i> 
+            <span>Total: {typeof keyCount === 'number' ? keyCount.toLocaleString('de-DE') : keyCount}</span>
           </div>
-          
-          <div className="output-container">
-            <div className="output-text">{generatedKey}</div>
-          </div>
-          
-          <div className="button-container">
-            <button 
-              onClick={saveAsAction}
-              disabled={!generatedKey}
-              className={generatedKey ? "glow-effect" : ""}
-            >
-              Speichern...
-            </button>
-          </div>
-          
-          <div id="install-path-info" className="info-box">
-            <p>⚠️ WICHTIG: Für die korrekte Funktion muss die Lizenzdatei in folgendem Pfad gespeichert werden:</p>
-            <p className="path-highlight" id="target-path"></p>
-            <p style={{display: 'none', marginTop: '10px'}}>
-              Windows-Pfad (Beispiel): <span className="path-highlight" id="windows-path"></span>
-            </p>
-          </div>
-          
-          <div className={`status-bar ${status.isError ? 'error' : ''}`}>
-            {status.message}
-          </div>
-        </div>
+        </React.Fragment>
       );
     };
     
