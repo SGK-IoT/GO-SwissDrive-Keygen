@@ -4,7 +4,7 @@
   "description": "A modern license key generator for GO SwissDrive software",
   "main": "index.html",
   "scripts": {
-    "dev": "serve",
+    "dev": "vercel dev",
     "build": "echo 'No build step required'"
   },
   "keywords": [
@@ -16,6 +16,9 @@
   ],
   "author": "",
   "license": "UNLICENSED",
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  },
   "devDependencies": {
     "serve": "^14.2.1"
   }
